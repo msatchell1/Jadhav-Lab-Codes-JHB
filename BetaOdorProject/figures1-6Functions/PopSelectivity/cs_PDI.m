@@ -308,8 +308,8 @@ for r = 1:length(regions)
     
     figfile = [figDir,'IgarashiReplication\',figtitle];
     
-    print('-dpdf', figfile);
-    print('-djpeg', figfile);
-    saveas(gcf,figfile,'fig');
+%     print('-dpdf', figfile);
+%     print('-djpeg', figfile);
+%     saveas(gcf,figfile,'fig');
     %legend({region, 'Shuffle'})
 end

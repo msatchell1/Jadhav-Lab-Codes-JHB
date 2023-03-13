@@ -39,16 +39,16 @@ c.
 %clearvars -except SuperRat
 
 % set region parameters here!!
-regions={'PFC','CA1','OB'};
+regions={'CA1'};
 colors=[rgbcolormap('DarkAquamarine'); rgbcolormap('LightCoral'); rgbcolormap('DarkOrange')];
 rhythmcolors=[rgbcolormap('navy'); rgbcolormap('DeepPink')]; % BETA IS BLUE
-type={'pyr','in'};
-rhythm={'beta','resp'};
+type={'pyr'};
+rhythm={'beta'};
 %% Overall beta coherence using whole odor period and just the correct trials
 % we should be using stats only on local beta, but we can do all
 
 
-plotIT=0;
+plotIT=1;
     
 for i=1:length(SuperRat)
     myclock=tic;
@@ -97,9 +97,9 @@ for i=1:length(SuperRat)
             end
         end
     end
-    fprintf('Session %d, rat %s day %d done in %d seconds \n',i, SuperRat(i).name,SuperRat(i).daynum, round(toc(myclock)));
-end
-
+    
+    end
+fprintf('Session %d, rat %s day %d done in %d seconds \n',i, SuperRat(i).name,SuperRat(i).daynum, round(toc(myclock)));
 end
 
 

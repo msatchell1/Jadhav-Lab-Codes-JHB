@@ -1,16 +1,21 @@
 %% ClaireWrapper/pipeline
 
 % first get your code repository
-cd('C:\Users\Jadhavlab\Documents\gitRepos\Jadhav-Lab-Codes\BetaOdorProject\figure7Functions');
-addpath(genpath('C:\Users\Jadhavlab\Documents\gitRepos\Jadhav-Lab-Codes\BetaOdorProject\figure7Functions'));
+% cd('C:\Users\Jadhavlab\Documents\gitRepos\Jadhav-Lab-Codes\BetaOdorProject\figure7Functions');
+cd('C:\Users\micha\OneDrive - brandeis.edu\Brandeis Stuff\Jadhav Lab\Jadhav-Lab-Codes-JHB\BetaOdorProject\figure7Functions');
+% addpath(genpath('C:\Users\Jadhavlab\Documents\gitRepos\Jadhav-Lab-Codes\BetaOdorProject\figure7Functions'));
+addpath(genpath('C:\Users\micha\OneDrive - brandeis.edu\Brandeis Stuff\Jadhav Lab\Jadhav-Lab-Codes-JHB\BetaOdorProject\figure7Functions'));
 
 % now build your dataset;
-usesaved=0;
+usesaved=1;
 if usesaved==1
     try % home computer filepath
-        load('G:\BrandeisDatasets\SymanskiData\SuperRat-SymanskiElife-2022-08-02.mat');
+%         load('G:\BrandeisDatasets\SymanskiData\SuperRat-SymanskiElife-2022-08-02.mat');
+        load('D:\OdorPlaceAssociation\SuperRat-SymanskiElife-2022-08-02.mat');
         % remake this so its the folder with this projects codebase
-        cd('E:\GithubCodeRepositories\Jadhav-Lab-Codes\BetaOdorProject');
+%         cd('E:\GithubCodeRepositories\Jadhav-Lab-Codes\BetaOdorProject');
+        cd('C:\Users\micha\OneDrive - brandeis.edu\Brandeis Stuff\Jadhav Lab\Jadhav-Lab-Codes-JHB\BetaOdorProject');
+
     catch % work computer filepath
         try
             load('E:\BrandeisDatasets\SymanskiData\SuperRat-SymanskiElife-2022-08-02.mat');

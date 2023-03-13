@@ -74,9 +74,17 @@ same place?  e.g. are they splitters or are they directionally sensitive?
 region={'CA1','PFC'};
 type='pyr';
 
-% get a superrat of units
+% get a superrat of units 
+% (units for first session as template) -- MES
 SuperUnits=orderfields(SuperRat(1).units);
 
+% Add units from other sessions -- MES
+% If an error happens:
+% "Number of fields in structure arrays being concatenated do not match."
+% it's because some of the units didn't have fields
+% added to them (done in the function CalcLinTrajectories). I need to make
+% sure to run the loops in the functions that add data to SuperRat all the
+% way through before moving on to other functions. -- MES
 for i=2:length(SuperRat)
     theseunits=orderfields(SuperRat(i).units);
     % for some reason csi is in some of these structs

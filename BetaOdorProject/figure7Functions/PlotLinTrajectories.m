@@ -22,7 +22,7 @@ animal, and interp the appropriate spikes so you get nspikes per bin
 
 %% 1. get your trajectories
 % choose your session
-i=6;
+i=36;
 
 
 
@@ -89,10 +89,16 @@ for un=1:length(SuperRat(i).units)
     % now plot the two out
     figure; subplot(3,1,1);
     plot(bins(1:end-1),occupancy);
+    ylabel("Time of Occupation?")
     subplot(3,1,2);
     plot(bins(1:end-1),nspikes);
+    ylabel("Number of Spikes")
     subplot(3,1,3);
     plot(bins(1:end-1),SmoothMat2(nspikes./occupancy,[5 0],2));
+    xlabel("Linearized Position")
+    ylabel("(Num Spikes)/(Occupancy Time)?")
+
+    pause
 end
 
 
@@ -205,26 +211,26 @@ for i=1:length(SuperRat)
         fullcurves=[]; clear cellsort;
         for tr=1:4
             % first gather the four trajectories by nanning out all the other data
-            temptraj=SuperRat(i).LinCoords;
-            keepinds=temptraj(:,4)==trajinds(tr,1) & temptraj(:,5)==trajinds(tr,2);
-            temptraj=temptraj(keepinds,:); % pull fav line, and rows
+            temptraj_1=table2array(SuperRat(i).LinCoords);
+            keepinds=temptraj_1(:,4)==trajinds(tr,1) & temptraj_1(:,5)==trajinds(tr,2);
+            temptraj_1=temptraj_1(keepinds,:); % pull fav line, and rows
             
             % and nan out the slow times (dx for linear pos)
-            temptraj=sortrows(temptraj,1); % order chronologically
+            temptraj_1=sortrows(temptraj_1,1); % order chronologically
             
             
             % find the epochs sou you can kill bad spikes
-            breaks=find(diff(temptraj(:,1))>1);
-            epochs=[[temptraj(1); temptraj(breaks+1,1)] [temptraj(breaks,1); temptraj(end,1)]];
+            breaks=find(diff(temptraj_1(:,1))>1);
+            epochs=[[temptraj_1(1); temptraj_1(breaks+1,1)] [temptraj_1(breaks,1); temptraj_1(end,1)]];
             
             % get occupancy
-            [occupancy,bins]=histcounts(temptraj(:,8),1:max(allposplot(:,8)));
+            [occupancy,bins]=histcounts(temptraj_1(:,8),1:max(allposplot(:,8)));
 
             % now for each unit capture a mean tuning curve for each run
             for j=1:length(unitdata)
                 spikes=unitdata(j).ts;
                 Espikes=EpochCoords(spikes(:,1),epochs); % only pull spike ts
-                spikepos=interp1(temptraj(:,1),temptraj(:,8),Espikes,'nearest'); % now interp to position
+                spikepos=interp1(temptraj_1(:,1),temptraj_1(:,8),Espikes,'nearest'); % now interp to position
                 [nspikes,bins]=histcounts(spikepos,bins); % get number of spikes per position
                 % now save this tuning curve
                 fullcurves(j,tr,:)=SmoothMat2(nspikes./occupancy,[5 0],2);
@@ -264,6 +270,7 @@ for i=1:length(SuperRat)
         
         %savefig(fullfile(savedir, [SuperRat(i).name ' Day # ' num2str(SuperRat(i).daynum)]));
     end
+    pause
 end
     
    

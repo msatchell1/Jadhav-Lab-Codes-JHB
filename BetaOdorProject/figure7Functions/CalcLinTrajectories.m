@@ -44,10 +44,11 @@ for ses=1:length(SuperRat)
 
         % grab the run blocks
         blocks=SuperRat(ses).RunEpochs;
-        fulltraj=SuperRat(ses).LinCoords;
+        fulltraj=table2array(SuperRat(ses).LinCoords);
         
         % first, get a true velocity, filter (1 if running, 0 if not)
         fulltraj(:,10)=SmoothMat2(fulltraj(:,7),[0 50],veltimesmooth)>=speedthreshold;
+%         fulltraj.speed_=SmoothMat2(fulltraj.speed,[0 50],veltimesmooth)>=speedthreshold; % -- MES 1/31/23
         
         % now start dicing up the data by epoch
         fulltraj(~ismember(fulltraj(:,6),blocks),:)=[]; % use only run sesses
@@ -563,21 +564,21 @@ end
 %% just look at some cells to see if they're selective and that
 % the raw rates look reasonable
 % 
-% ses=1;
-% % now lets see if there are valid priors here
-% for i=1:length(SuperRat(ses).units)
-%     if any(SuperRat(ses).units(i).PFexist)
-%         figure;
-%         try, plot(SuperRat(ses).units(i).LinPlaceFields{1}(1,:)); end
-%         hold on;
-%         try, plot(-SuperRat(ses).units(i).LinPlaceFields{1}(2,:)); end
-%         try, plot(SuperRat(ses).units(i).LinPlaceFields{1}(3,:)); end
-%        try,  plot(-SuperRat(ses).units(i).LinPlaceFields{1}(4,:)); end
-%         
-%         title([num2str(i) ' ' SuperRat(ses).units(i).area SuperRat(ses).units(i).type]);
-%         
-%     end
-% end
+ses=1;
+% now lets see if there are valid priors here
+for i=1:length(SuperRat(ses).units)
+    if any(SuperRat(ses).units(i).PFexist)
+        figure;
+        try, plot(SuperRat(ses).units(i).LinPlaceFields{1}(1,:)); end
+        hold on;
+        try, plot(-SuperRat(ses).units(i).LinPlaceFields{1}(2,:)); end
+        try, plot(SuperRat(ses).units(i).LinPlaceFields{1}(3,:)); end
+       try,  plot(-SuperRat(ses).units(i).LinPlaceFields{1}(4,:)); end
+        
+        title([num2str(i) ' ' SuperRat(ses).units(i).area SuperRat(ses).units(i).type]);
+        
+    end
+end
 % looks really good actually!
 
 %%

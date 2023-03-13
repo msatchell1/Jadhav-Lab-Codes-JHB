@@ -9,8 +9,11 @@
 %
 %
 %***** MAKE SURE THIS WORKS FOR THIS COMPUTER
-eegDir='I:\BrandeisData\SymanskiData';
-eegOut='E:\Brandeis datasets\Claire Data';
+% eegDir='I:\BrandeisData\SymanskiData';
+eegDir = 'E:\OdorPlaceAssociation';
+% THe out location should be the folder that contains the CSXXExpt folders.
+% eegOut='E:\Brandeis datasets\Claire Data';
+eegOut='E:\OdorPlaceAssociation';
 %
 %
 %
@@ -30,11 +33,13 @@ rhythmcolors=[rgbcolormap('navy'); rgbcolormap('DeepPink')];
 
 %% what does RR look like anyways
 
-%temp=load('E:\ClaireData\CS31_direct\EEG\CS31resp02-04-20');
+% temp=load('E:\ClaireData\CS31_direct\EEG\CS31resp02-04-20');
 
 load('respfilter');
 load('betafilter');
-load('ripplefilter');
+% load('ripplefilter');
+load('slowripplefilter');
+ripplefilter = slowripplefilter; % So I don't have to rename everything below. - MES
 
 %% Initial code block to index the file from which I'll pullRR data
 
@@ -67,7 +72,8 @@ for i=1:length(SuperRat)
 
         % generate filename here
         [~,name]=system('hostname');
-        if strcmpi(strtrim(name),'desktop-t3q247t')
+%         if strcmpi(strtrim(name),'desktop-t3q247t')
+        if strcmpi(strtrim(name),'Michael_S_Dell') % Changed for my laptop - MES
             ratname=sprintf('%sExpt',SuperRat(i).name);
             allLFPfiles=dir(fullfile(eegDir,ratname,'**/*.mat'));
         else
@@ -120,8 +126,10 @@ for i=1:length(SuperRat)
 
             
 
-            % save struct out
-            eegName=fullfile(eegOut,sprintf('%sExpt',SuperRat(i).name),'EEG',...
+            % save struct out. I added in
+            % sprintf('%s_direct',SuperRat(i).name) to match the data
+            % format from John's computer - MES
+            eegName=fullfile(eegOut,sprintf('%sExpt',SuperRat(i).name),sprintf('%s_direct',SuperRat(i).name),'EEG',...
                 sprintf('%sday%d%seegdata',SuperRat(i).name,SuperRat(i).daynum,regions{j}));
             save(eegName,'rawcontinuous','respcontinuous','betacontinuous','ripplecontinuous','respfilter',...
                 'betafilter','ripplefilter');

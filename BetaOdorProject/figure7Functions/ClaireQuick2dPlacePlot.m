@@ -36,6 +36,7 @@ for rt=1:length(SuperRat)
                 
             end
             title([SuperRat(rt).units(i).type ' ' SuperRat(1).units(i).area ' ' num2str(i)]);
+            pause
         end
         
     end

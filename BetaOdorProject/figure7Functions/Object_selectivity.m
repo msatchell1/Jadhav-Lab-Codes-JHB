@@ -54,32 +54,52 @@ for ses=1:length(SuperRat)
         % and now get the pre trial rates for a trial-length matched control
         [~,pretrspikes]=event_spikes(SuperRat(ses).units(i).ts,mytrialmat(:,1)-(mytrialmat(:,2)-mytrialmat(:,1)),0,mytrialmat(:,2)-mytrialmat(:,1));
         
+        % Compares distributions of trial spikes for left vs right odors.
+        % MES: gets the p-value from comparing the two spike distributions.
         coderp=ranksum(trspikes(mytrialmat(:,3)==1),trspikes(mytrialmat(:,3)==0));
+        % Compares trial spikes to pre-trial spikes to see if there is a
+        % significant increase in firing during the odor presentation
+        % period. -- MES
         responderp=signrank(trspikes,pretrspikes);
+        % If either are significant:
         if coderp<.05 || responderp<.05 % if the cell does something... plot it
             figure;
+            sgtitle(sprintf("Session %d Unit %d, Activity on Correct Trials. Note p-values not exact", [ses,i]))
             sp(1)=subplot(2,1,1);
             imagesc(timebins, 1:size(startCurves,2), curvemat(sortinds,:)); hold on;
             plot([timebins(1) timebins(end)],[cutspot cutspot],'k','LineWidth',2);
+            title("Heat map for single unit spiking across trials")
+            xlabel("Time from sniffing onset (like Fig. 2)? (s) ")
+            ylabel("Trial number")
             sp(2)=subplot(2,1,2);
-            plot(timebins,nanmean(curvemat(odorID==1,:)),'r','LineWidth',3);
+            plt1 = plot(timebins,nanmean(curvemat(odorID==1,:)),'r','LineWidth',3,"DisplayName","left odor");
             
             patch([timebins fliplr(timebins)],[nanmean(curvemat(odorID==1,:))+nanstd(curvemat(odorID==1,:),0,1)...
                 fliplr(nanmean(curvemat(odorID==1,:))-nanstd(curvemat(odorID==1,:),0,1))],[.85 .325 .098],...
                 'LineStyle','none','FaceAlpha',.5)
-            hold on; plot(timebins,nanmean(curvemat(odorID==0,:)),'b','LineWidth',3);
+            hold on; plt2 = plot(timebins,nanmean(curvemat(odorID==0,:)),'b','LineWidth',3,"DisplayName","right odor");
             patch([timebins fliplr(timebins)],[nanmean(curvemat(odorID==0,:))+nanstd(curvemat(odorID==0,:),0,1)...
                 fliplr(nanmean(curvemat(odorID==0,:))-nanstd(curvemat(odorID==0,:),0,1))],[0    0.4470    0.7410],...
                 'LineStyle','none','FaceAlpha',.5)
             linkaxes(sp,'x');
             % now get the overall rate
-            title(sprintf('Mean Sampling period = %.2f P for responsive is %.2f p for selective is %.2f',...
+            title(sprintf('Mean Sampling period = %.2f. P for responsive is %.2f, p for selective is %.2f',...
                 mean(mytrialmat(:,2)-mytrialmat(:,1)),responderp,coderp));
+            ylabel("Avg activity across trials")
+            legend([plt1,plt2])%,["left odor", "right odor"]);
+
+            pause
         end
+        
     end
+   
 end
 
 %%
+
+% MES: This code was commented out when I got it, so I'm guessing it isn't
+% necessary to run everything else.
+
 % major update breaks each of these steps into a separate loop
 % this calculates the following:
 
@@ -438,7 +458,7 @@ for ses=1:length(SuperRat)
         [allspks,spkevs,~,trspks]=event_spikes(SuperRat(ses).units(i).ts(:,1),...
             trialMat(:,1),0,trialMat(:,2)-trialMat(:,1));
 
-        % spikes in trial matched pre odor period
+        % spikes in trial-matched pre-odor period
         [~,prespkevs]=event_spikes(SuperRat(ses).units(i).ts(:,1),...
             trialMat(:,1),trialMat(:,2)-trialMat(:,1),0); % matching at least -.5 to 0
 
@@ -637,7 +657,9 @@ varTypes=repmat({'double'},1,8);
 responseTable=table('size',[2 8],'VariableTypes',varTypes,'VariableNames',{'allTot','allActive',...
     'pyrTot','pyrResp','pyrSel','inTot','inResp','inSel'},...
     'RowNames',{'PFC','CA1'});
-allCells=cell2mat({SuperRat.units});
+allCells=cell2mat({SuperRat.units}); % MES: error occurs here because not 
+% all units have the same number of fields. Short track sessions contain
+% units with fewer fields.
 %
 regions={'PFC','CA1'};
 
